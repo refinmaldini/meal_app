@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meal App - Home</title>
+    <!-- Include Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800 shadow-md">
+      <div
+        class="container mx-auto px-6 py-6 flex justify-between items-center"
+      >
+        <a href="#" class="text-2xl font-bold text text-white">Meal App</a>
+        <div>
+          <a
+            href="pages/categories.html"
+            class="text-white hover:text-blue-500 transition"
+            >Browse Categories</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section
+      class="bg-cover bg-center h-screen"
+      style="
+        background-image: url('https://www.themealdb.com/images/media/meals/wxywrq1468235067.jpg');
+      "
+    >
+      <div
+        class="flex items-center justify-center h-full bg-black bg-opacity-50"
+      >
+        <div class="text-center text-white">
+          <h1 class="text-4xl md:text-6xl font-bold mb-4">
+            Welcome to Meal Explorer
+          </h1>
+          <p class="text-lg md:text-2xl mb-6">
+            Discover delicious meals from around the world.
+          </p>
+          <a
+            href="pages/categories.html"
+            class="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition"
+            >Browse Categories</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Categories Section -->
+    <section class="container mx-auto p-8">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+        Explore Featured Categories
+      </h2>
+      <div
+        id="featured-categories"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
+        <!-- Featured categories will be injected here -->
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 text-center">
+      <p>&copy; 2024 Meal Explorer - All Rights Reserved.</p>
+    </footer>
+
+    <!-- Axios for API Calls -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      // Fetch categories to feature them on the homepage
+      axios
+        .get("https://www.themealdb.com/api/json/v1/1/categories.php")
+        .then((response) => {
+          const categories = response.data.categories.slice(0, 4); // Limit to 4 featured categories
+          const featuredContainer = document.getElementById(
+            "featured-categories"
+          );
+
+          categories.forEach((category) => {
+            const categoryCard = `
+                        <div class="bg-white rounded shadow-lg hover:shadow-xl transition duration-300">
+                            <img src="${category.strCategoryThumb}" alt="${category.strCategory}" class="w-full h-40 object-cover rounded-t">
+                            <div class="p-4 text-center">
+                                <h3 class="text-lg font-bold mb-2">${category.strCategory}</h3>
+                                <div class="bg-blue-500 rounded-full hover:bg-opacity-80">
+                                <a href="pages/category-detail.html?category-name=${category.strCategory}" class="text-white">Explore Meals</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            featuredContainer.innerHTML += categoryCard;
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category Meals</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="bg-gray-100">
+      <div class="container mx-auto p-7">
+        <h1
+          id="category-title"
+          class="text-3xl text-center font-bold mb-6"
+        ></h1>
+        <div
+          id="meals"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+        >
+          <!-- Meals will be injected here -->
+        </div>
+      </div>
+    </div>
+    <footer class="bg-gray-800 text-white py-6 text-center">
+      <p>&copy; 2024 Meal Explorer - All Rights Reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      // Get category name from URL
+      const params = new URLSearchParams(window.location.search);
+      const categoryName = params.get("category-name");
+
+      document.getElementById(
+        "category-title"
+      ).textContent = `${categoryName} Meals`;
+
+      axios
+        .get(
+          `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoryName}`
+        )
+        .then((response) => {
+          const meals = response.data.meals;
+          const mealsContainer = document.getElementById("meals");
+
+          meals.forEach((meal) => {
+            const mealCard = `
+                        <div class="bg-white rounded shadow hover:shadow-lg transition duration-300">
+                            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="w-full h-40 object-cover rounded-t">
+                            <div class="p-4">
+                                <h2 class="text-lg font-bold mb-4">${meal.strMeal}</h2>
+                                <div class="bg-blue-500 rounded-full hover:bg-opacity-80 text-center">
+                                <a href="meal-detail.html?meal-id=${meal.idMeal}" class="text-white">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            mealsContainer.innerHTML += mealCard;
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching meals:", error);
+        });
+    </script>
+  </body>
+</html>
